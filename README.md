@@ -24,8 +24,8 @@ Install-Package Hangfire.MySql.Core_MySql.Data
 Use one the following ways to initialize `MySqlStorage`: 
 - Create new instance of `MySqlStorage` with connection string constructor parameter and pass it to `Configuration` with `UseStorage` method:
 ```
-  GlobalConfiguration.Configuration.UseStorage(
-    new MySqlStorage(connectionString));
+  var sContext = Configuration.GetConnectionString("Context");
+            services.AddHangfire(a => a.UseStorage(new MySqlStorage(sContext)));
 ```
 - There must be `Allow User Variables` set to `true` in the connection string. For example: `server=127.0.0.1;uid=root;pwd=root;database={0};Allow User Variables=True`
 - Alternatively one or more options can be passed as a parameter to `MySqlStorage`:
