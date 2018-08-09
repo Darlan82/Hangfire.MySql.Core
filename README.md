@@ -1,6 +1,6 @@
 # Hangfire.MySql.Core Implementation
 
-Hangfire.MySql.Core is based on Hangfire.MySqlStorage(https://github.com/arnoldasgudas/Hangfire.MySqlStorage)
+Fork for https://github.com/stulzq/Hangfire.MySql.Core
 
 I fix some bug and support .net standard 2.0
 
@@ -13,10 +13,10 @@ MySql storage implementation of [Hangfire](http://hangfire.io/) - fire-and-forge
 ## Installation
 Install MySQL
 
-Run the following command in the NuGet Package Manager console to install Hangfire.MySql.Core:
+Run the following command in the NuGet Package Manager console to install Hangfire.MySql.Core_MySql.Data:
 
 ```
-Install-Package Hangfire.MySql.Core
+Install-Package Hangfire.MySql.Core_MySql.Data
 ```
 
 ## Usage
@@ -30,19 +30,18 @@ Use one the following ways to initialize `MySqlStorage`:
 - There must be `Allow User Variables` set to `true` in the connection string. For example: `server=127.0.0.1;uid=root;pwd=root;database={0};Allow User Variables=True`
 - Alternatively one or more options can be passed as a parameter to `MySqlStorage`:
 ```
-GlobalConfiguration.Configuration.UseStorage(
-    new MySqlStorage(
-        connectionString, 
-        new MySqlStorageOptions
-        {
-            TransactionIsolationLevel = IsolationLevel.ReadCommitted,
-            QueuePollInterval = TimeSpan.FromSeconds(15),
-            JobExpirationCheckInterval = TimeSpan.FromHours(1),
-            CountersAggregateInterval = TimeSpan.FromMinutes(5),
-            PrepareSchemaIfNecessary = true,
-            DashboardJobListLimit = 50000,
-            TransactionTimeout = TimeSpan.FromMinutes(1),
-        }));
+var sContext = Configuration.GetConnectionString("Context");
+            services.AddHangfire(a => a.UseStorage(new MySqlStorage(sContext,
+                new MySqlStorageOptions
+                {
+                    TransactionIsolationLevel = IsolationLevel.ReadCommitted,
+					QueuePollInterval = TimeSpan.FromSeconds(15),
+					JobExpirationCheckInterval = TimeSpan.FromHours(1),
+					CountersAggregateInterval = TimeSpan.FromMinutes(5),
+					PrepareSchemaIfNecessary = true,
+					DashboardJobListLimit = 50000,
+					TransactionTimeout = TimeSpan.FromMinutes(1),
+                })));
 ```
 Description of optional parameters:
 - `TransactionIsolationLevel` - transaction isolation level. Default is read committed.
