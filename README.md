@@ -4,7 +4,7 @@ Fork for https://github.com/stulzq/Hangfire.MySql.Core
 
 I fix some bug and support .net standard 2.0
 
-[![Latest version](https://img.shields.io/nuget/v/Hangfire.MySql.Core.svg)](https://www.nuget.org/packages/Hangfire.MySql.Core/) 
+[![Latest version](https://img.shields.io/nuget/v/Hangfire.MySql.Core_MySql.Data.svg)](https://www.nuget.org/packages/Hangfire.MySql.Core_MySql.Data/) 
 
 MySql storage implementation of [Hangfire](http://hangfire.io/) - fire-and-forget, delayed and recurring tasks runner for .NET. Scalable and reliable background job runner. Supports multiple servers, CPU and I/O intensive, long-running and short-running jobs.
 
