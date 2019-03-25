@@ -29,17 +29,22 @@ namespace Hangfire.MySql.Core.JobQueue
             FetchedJob fetchedJob = null;
             MySqlConnection connection = null;
 
+            double timeOut = 0;
+            string token = string.Empty;
+            bool updated = false;
             do
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 connection = _storage.CreateAndOpenConnection();
-                
+
+                updated = false;
                 try
-                {
+                {                    
                     using (new MySqlDistributedLock(_storage, "JobQueue", TimeSpan.FromSeconds(30)))
                     {
-                        string token = Guid.NewGuid().ToString();
+                        token = Guid.NewGuid().ToString();
 
+                        timeOut = _options.InvisibilityTimeout.Negate().TotalSeconds;
                         int nUpdated = connection.Execute(
                             "update JobQueue set FetchedAt = UTC_TIMESTAMP(), FetchToken = @fetchToken " +
                             "where (FetchedAt is null or FetchedAt < DATE_ADD(UTC_TIMESTAMP(), INTERVAL @timeout SECOND)) " +
@@ -48,11 +53,12 @@ namespace Hangfire.MySql.Core.JobQueue
                             new
                             {
                                 queues = queues,
-                                timeout = _options.InvisibilityTimeout.Negate().TotalSeconds,
+                                timeout = timeOut,
                                 fetchToken = token
                             });
 
-                        if(nUpdated != 0)
+                        updated = true;
+                        if (nUpdated != 0)
                         {
                             fetchedJob =
                                 connection
@@ -72,7 +78,9 @@ namespace Hangfire.MySql.Core.JobQueue
                 {
                     Logger.ErrorException(ex.Message, ex);
                     _storage.ReleaseConnection(connection);
-                    throw;
+
+                    throw new Exception($"Error dequeue in {(updated ? "select" : "update")}" +
+                        $"Parameters: queues = {queues}, timeout = {timeOut}, fetchToken = {token} ", ex);
                 }
 
                 if (fetchedJob == null)
