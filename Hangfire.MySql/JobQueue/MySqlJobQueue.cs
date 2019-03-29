@@ -29,7 +29,7 @@ namespace Hangfire.MySql.Core.JobQueue
             FetchedJob fetchedJob = null;
             MySqlConnection connection = null;
 
-            double timeOut = 0;
+            int timeOut = 0;
             string token = string.Empty;
             bool updated = false;
             do
@@ -44,7 +44,7 @@ namespace Hangfire.MySql.Core.JobQueue
                     {
                         token = Guid.NewGuid().ToString();
 
-                        timeOut = _options.InvisibilityTimeout.Negate().TotalSeconds;
+                        timeOut = _options.InvisibilityTimeout.Negate().Seconds;
                         int nUpdated = connection.Execute(
                             "update JobQueue set FetchedAt = UTC_TIMESTAMP(), FetchToken = @fetchToken " +
                             "where (FetchedAt is null or FetchedAt < DATE_ADD(UTC_TIMESTAMP(), INTERVAL @timeout SECOND)) " +

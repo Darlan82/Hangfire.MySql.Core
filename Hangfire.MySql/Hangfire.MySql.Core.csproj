@@ -11,8 +11,8 @@
     <PackageProjectUrl>https://github.com/Darlan82/Hangfire.MySql.Core</PackageProjectUrl>
     <Copyright>Copyright 2017-2018</Copyright>
     <PackageTags>Hangfire MySql Hangfire.MySql Hangfire.MySql.Core</PackageTags>
-    <Version>2.1.9</Version>
-    <AssemblyVersion>2.1.8.0</AssemblyVersion>
+    <Version>2.1.10</Version>
+    <AssemblyVersion>2.1.10.0</AssemblyVersion>
     <AssemblyName>Hangfire.MySql.Core</AssemblyName>
     <RootNamespace>Hangfire.MySql.Core</RootNamespace>
     <PackageReleaseNotes>Change MySqlConnector for MySql.Data</PackageReleaseNotes>
